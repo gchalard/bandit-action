@@ -83,11 +83,11 @@ runs:
     - name: Set up Python 3.9
       uses: actions/setup-python@v5
       with:
-        python-version: 3.9
+        python-version: 3.11
 
     - name: Install Bandit
       shell: bash
-      run: pip install bandit[sarif]
+      run: pip install git+https://github.com/gchalard/bandit.git@main
 
     - name: Checkout repository
       uses: actions/checkout@v4
