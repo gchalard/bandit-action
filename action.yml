@@ -66,6 +66,16 @@ inputs:
       Source file(s) or directory(s) to be tested
     required: true
     default: '.'
+  format:
+    description: |
+      The output format
+    required: false
+    default: "DEFAULT"
+  output:
+    description: |
+      The output file
+    required: false
+    default: "DEFAULT"
 
 runs:
   using: composite
@@ -125,7 +135,20 @@ runs:
         else
             INI="--ini $INPUT_INI"
         fi
-        bandit $CONFIGFILE $PROFILE $TESTS $SKIPS $SEVERITY $CONFIDENCE -x $INPUT_EXCLUDE $BASELINE $INI -r $INPUT_TARGETS -f sarif -o results.sarif || true
+        if [ "${INPUT_OUTPUT}" == "DEFAULT" ] ; then
+            OUTPUT=""
+        else
+          OUTPUT="--output ${INPUT_OUTPUT}"
+        fi
+
+        if [ "${INPUT_FORMAT}" == "DEFAULT" ] ; then
+            FORMAT=""
+        else
+            FORMAT="--format ${INPUT_FORMAT}"
+        fi
+
+
+        bandit $CONFIGFILE $PROFILE $TESTS $SKIPS $SEVERITY $CONFIDENCE -x $INPUT_EXCLUDE $BASELINE $INI -r $INPUT_TARGETS ${FORMAT} ${OUTPUT} || true
       env:
         INPUT_CONFIGFILE: ${{ inputs.configfile }}
         INPUT_PROFILE: ${{ inputs.profile }}
@@ -137,8 +160,5 @@ runs:
         INPUT_BASELINE: ${{ inputs.baseline }}
         INPUT_INI: ${{ inputs.ini }}
         INPUT_TARGETS: ${{ inputs.targets }}
-
-    - name: Upload SARIF file
-      uses: github/codeql-action/upload-sarif@v3
-      with:
-        sarif_file: results.sarif
+        INPUT_FORMAT: ${{ inputs.format }}
+        INPUT_OUTPUT: ${{ inputs.output }}
