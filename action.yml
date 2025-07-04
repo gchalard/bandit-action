@@ -1,6 +1,6 @@
-name: Bandit by PyCQA
-description: The official Bandit Action developed by PyCQA
-author: '@PyCQA'
+name: Bandit fork by PyCQA
+description: The unofficial Bandit Action developed by PyCQA
+author: '@gchalard'
 
 branding:
   icon: 'shield'
